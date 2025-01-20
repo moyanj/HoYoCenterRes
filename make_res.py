@@ -7,7 +7,7 @@ import hashlib
 
 # 定义资源链接
 hutao_res_url = "https://static-tiny.snapgenshin.cn/zip/{}.zip"
-character_data_url = "https://github.com/EnkaNetwork/API-docs/raw/refs/heads/master/store/characters.json"
+character_data_url = "https://api.enka.network/store/characters.json"
 star_rail_repo_url = "https://ghproxy.cn/https://github.com/Mar-7th/StarRailRes.git"
 
 # 定义资源列表
@@ -54,7 +54,7 @@ def download_ys_info():
         print("原神角色信息已存在，跳过下载。")
     else:
         subprocess.run(
-            f"git clone --filter=blob:none --sparse https://github.com/DGP-Studio/Snap.Metadata {git_tmpdir}/GenshinInfo",
+            f"git clone --filter=blob:none --sparse https://ghproxy.cn/https://github.com/DGP-Studio/Snap.Metadata {git_tmpdir}/GenshinInfo",
             shell=True,
             check=True,
             stdout=subprocess.DEVNULL,
