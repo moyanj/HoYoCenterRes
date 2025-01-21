@@ -5,6 +5,7 @@ import os
 import shutil
 import hashlib
 from ftplib import FTP
+import zipfile
 
 # 定义资源链接
 hutao_res_url = "https://static-tiny.snapgenshin.cn/zip/{}.zip"
@@ -127,7 +128,7 @@ def download_sr():
     )
     os.chdir(os.path.join(git_tmpdir, "StarRailRes"))
     subprocess.run(
-        "git sparse-checkout add image/character_preview/",
+        "git sparse-checkout add icon/character/",
         shell=True,
         check=True,
         stdout=subprocess.DEVNULL,
@@ -152,7 +153,7 @@ def download_sr():
 def prepare_sr():
     print("正在准备星穹铁道资源...")
     shutil.copytree(
-        os.path.join(git_tmpdir, "StarRailRes", "image", "character_preview"),
+        os.path.join(git_tmpdir, "StarRailRes", "icon", "character"),
         os.path.join(sr_tmpdir, "CharacterIcon"),
     )
     shutil.copytree(
@@ -178,6 +179,21 @@ def upload_to_ftp(file_path, remote_path):
     print(f"文件上传完成: {remote_path}")
 
 
+def make_archive(src, dst):
+    with zipfile.ZipFile(
+        dst,
+        "w",
+        compresslevel=9,
+        compression=zipfile.ZIP_LZMA,
+    ) as zipf:
+        for root, dirs, files in os.walk(src):
+            for file in files:
+                zipf.write(
+                    os.path.join(root, file),
+                    os.path.relpath(os.path.join(root, file), os.path.join(src, "..")),
+                )
+
+
 # 主程序
 if __name__ == "__main__":
     create_directories()
@@ -186,7 +202,7 @@ if __name__ == "__main__":
     download_ys_info()
     download_sr()
     prepare_sr()
-    shutil.make_archive("resources", "zip", tmpdir)
+    make_archive("resources", "./resources.zip")
     with open("hash.txt", "w") as d:
         with open("./resources.zip", "rb") as s:
             d.write(hashlib.sha1(s.read()).hexdigest())
