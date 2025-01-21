@@ -4,6 +4,7 @@ import zipfile
 import os
 import shutil
 import hashlib
+from ftplib import FTP
 
 # 定义资源链接
 hutao_res_url = "https://static-tiny.snapgenshin.cn/zip/{}.zip"
@@ -13,12 +14,17 @@ star_rail_repo_url = "https://ghproxy.cn/https://github.com/Mar-7th/StarRailRes.
 # 定义资源列表
 hutao_res_list = ["AvatarIcon", "IconElement"]
 
-
 # 定义临时目录
 tmpdir = "./resources"
 ys_tmpdir = os.path.join(tmpdir, "Genshin")
 sr_tmpdir = os.path.join(tmpdir, "StarRail")
 git_tmpdir = ".tmp"
+
+# FTP 配置
+FTP_SERVER = "https://cn-nb1.rains3.com"
+FTP_USER = os.environ.get("FTP_USER")
+FTP_PASSWORD = os.environ.get("FTP_PASSWORD")
+FTP_UPLOAD_DIR = "/hoyocenter"
 
 
 # 创建目录
@@ -138,7 +144,7 @@ def download_sr():
         check=True,
         stdout=subprocess.DEVNULL,
     )
-    os.chdir("../..")  # 返回上一级目录
+    os.chdir("../..")
     print("星穹铁道资源下载完成。")
 
 
@@ -160,6 +166,17 @@ def prepare_sr():
     print("星穹铁道资源准备完成。")
 
 
+# 通过FTP上传文件
+def upload_to_ftp(file_path, remote_path):
+    print(f"开始上传文件到FTP: {file_path}")
+    with FTP(FTP_SERVER) as ftp:
+        ftp.login(user=FTP_USER, passwd=FTP_PASSWORD)
+        with open(file_path, "rb") as file:
+            ftp.cwd(FTP_UPLOAD_DIR)  # 切换到上传目录
+            ftp.storbinary(f"STOR {remote_path}", file)
+    print(f"文件上传完成: {remote_path}")
+
+
 # 主程序
 if __name__ == "__main__":
     create_directories()
@@ -172,3 +189,7 @@ if __name__ == "__main__":
     with open("hash.txt", "w") as d:
         with open("./resources.zip", "rb") as s:
             d.write(hashlib.sha1(s.read()).hexdigest())
+
+    # 上传到FTP
+    upload_to_ftp("resources.zip", "resources.zip")
+    upload_to_ftp("hash.txt", "hash.txt")
