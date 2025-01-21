@@ -190,7 +190,7 @@ def make_archive(src, dst):
             for file in files:
                 zipf.write(
                     os.path.join(root, file),
-                    os.path.relpath(os.path.join(root, file), os.path.join(src, "..")),
+                    os.path.relpath(os.path.join(root, file), src),
                 )
 
 
