@@ -166,10 +166,11 @@ def prepare_sr():
     print("星穹铁道资源准备完成。")
 
 
-# 通过FTP上传文件
 def upload_to_ftp(file_path, remote_path):
     print(f"开始上传文件到FTP: {file_path}")
-    with FTP(FTP_SERVER) as ftp:
+    with FTP() as ftp:
+        host, port = FTP_SERVER.split(":")
+        ftp.connect(host=host, port=int(port))
         ftp.login(user=FTP_USER, passwd=FTP_PASSWORD)
         with open(file_path, "rb") as file:
             ftp.cwd(FTP_UPLOAD_DIR)  # 切换到上传目录
