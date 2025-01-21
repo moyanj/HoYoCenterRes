@@ -21,7 +21,7 @@ sr_tmpdir = os.path.join(tmpdir, "StarRail")
 git_tmpdir = ".tmp"
 
 # FTP 配置
-FTP_SERVER = "https://cn-nb1.rains3.com"
+FTP_SERVER = "cn-nb1.rains3.com:8021"
 FTP_USER = os.environ.get("FTP_USER")
 FTP_PASSWORD = os.environ.get("FTP_PASSWORD")
 FTP_UPLOAD_DIR = "/hoyocenter"
