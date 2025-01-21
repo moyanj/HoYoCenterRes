@@ -192,4 +192,4 @@ if __name__ == "__main__":
 
     # 上传到FTP
     upload_to_ftp("resources.zip", "resources.zip")
-    upload_to_ftp("hash.txt", "hash.txt")
+    upload_to_ftp("version.txt", "version.txt")
