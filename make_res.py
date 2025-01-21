@@ -202,7 +202,7 @@ if __name__ == "__main__":
     download_ys_info()
     download_sr()
     prepare_sr()
-    make_archive("resources", "./resources.zip")
+    shutil.make_archive("resources", "zip", tmpdir)
     with open("hash.txt", "w") as d:
         with open("./resources.zip", "rb") as s:
             d.write(hashlib.sha1(s.read()).hexdigest())
